@@ -3,21 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Foresee Contable</title>
-
-    <!-- PWA: manifest + theme-color -->
-    <link rel="manifest" href="./manifest.webmanifest" />
-    <meta name="theme-color" content="#007bff" />
-
-    <!-- iOS (Safari) para modo standalone -->
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="Contable" />
-    <link
-      rel="apple-touch-icon"
-      href="https://res.cloudinary.com/datwdagbf/image/upload/v1756514680/logo_jkwegt.png"
-    />
-
+    <title>Gestor Financiero (Firebase)</title>
     <!-- Icono simple (puedes cambiar la URL si prefieres) -->
     <link
       rel="icon"
@@ -2083,15 +2069,6 @@
     <footer>
       <p>&copy; 2025 Gestor Financiero 00007</p>
     </footer>
-
-    <!-- PWA: Registro del Service Worker -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('./sw.js').catch((err) => console.log('SW error:', err));
-        });
-      }
-    </script>
 
     <!-- 
       PASO 4: MODIFICAR EL SCRIPT PRINCIPAL
