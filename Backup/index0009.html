@@ -18,13 +18,14 @@
     <meta name="apple-mobile-web-app-title" content="Contable" />
     <link
       rel="apple-touch-icon"
-      href="https://res.cloudinary.com/datwdagbf/image/upload/v1761960891/ingresos2_metwsi.png"
+      href="https://res.cloudinary.com/datwdagbf/image/upload/f_auto,q_auto/v1756514678/ingresos_ci7j4p.png"
     />
 
+    <!-- Icono simple (puedes cambiar la URL si prefieres) -->
     <link
       rel="icon"
       type="image/png"
-      href="https://res.cloudinary.com/datwdagbf/image/upload/v1761960891/ingresos2_metwsi.png"
+      href="https://res.cloudinary.com/datwdagbf/image/upload/f_auto,q_auto/v1756514678/ingresos_ci7j4p.png"
     />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
@@ -3717,30 +3718,6 @@
           );
         }
 
-        /**
-         * Elimina un pedido de Firestore.
-         */
-        function deleteOrder(orderId, customerName) {
-          openConfirmModal(
-            'Eliminar Pedido',
-            `¿Seguro que quieres eliminar el pedido de "${customerName}"? Esta acción no se puede deshacer.`,
-            async () => {
-              showLoading();
-              try {
-                const orderDoc = doc(db, 'artifacts', appId, 'users', userId, 'orders', orderId);
-                await deleteDoc(orderDoc);
-                showToast('Pedido eliminado');
-                // onSnapshot se encargará de actualizar la UI
-              } catch (error) {
-                console.error('Error borrando pedido:', error);
-                showMessageModal('Error', 'No se pudo eliminar el pedido.', 'error');
-              } finally {
-                hideLoading();
-              }
-            },
-          );
-        }
-
         // --- PEDIDOS ---
 
         /**
@@ -3765,25 +3742,15 @@
                 .map((p) => `<li>${p.quantity} x ${p.name} (${formatCurrency(p.price)})</li>`)
                 .join('');
 
-              // --- INICIO: HTML MODIFICADO PARA AÑADIR BOTÓN ---
               card.innerHTML = `
               <div class="order-card-header">
                 <div>
                   <h3>${order.customerName}</h3>
                   <span>Entrega: ${formatDate(order.deliveryDate)}</span>
                 </div>
-                
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                  <span class="order-card-status status-${order.status}">
-                    ${order.status === 'pending' ? 'Pendiente' : 'Completado'}
-                  </span>
-                  <button class="btn-icon delete-btn delete-order-btn" title="Eliminar Pedido" data-id="${
-                    order.id
-                  }">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></svg>
-                  </button>
-                </div>
-                
+                <span class="order-card-status status-${order.status}">
+                  ${order.status === 'pending' ? 'Pendiente' : 'Completado'}
+                </span>
               </div>
               <div class="order-card-body">
                 <strong>Productos:</strong>
@@ -3797,26 +3764,20 @@
                 </div>
               </div>
             `;
-              // --- FIN: HTML MODIFICADO ---
 
-              // Listener para el checkbox (existente)
+              // --- INICIO DE LA CORRECCIÓN ---
+              // 1. Buscamos el checkbox específico que acabamos de crear en el innerHTML
               const confirmCheckbox = card.querySelector(`#confirm-${order.id}`);
+
+              // 2. Verificamos que existe (buena práctica) y añadimos el listener
               if (confirmCheckbox) {
                 confirmCheckbox.addEventListener('change', (e) =>
                   handleConfirmDelivery(e.target.dataset.id),
                 );
               }
+              // --- FIN DE LA CORRECCIÓN ---
 
-              // --- INICIO: LISTENER PARA EL NUEVO BOTÓN DE BORRAR ---
-              const deleteBtn = card.querySelector('.delete-order-btn');
-              if (deleteBtn) {
-                deleteBtn.addEventListener('click', (e) =>
-                  // Pasamos el customerName para el mensaje de confirmación
-                  deleteOrder(e.currentTarget.dataset.id, order.customerName),
-                );
-              }
-              // --- FIN: LISTENER PARA EL NUEVO BOTÓN ---
-
+              // Ahora esta línea SÍ se ejecutará porque el error fue corregido
               ordersList.appendChild(card);
             });
           }
@@ -3939,7 +3900,7 @@
             sortedProducts.forEach((product) => {
               // Buscar si este producto ya está en el pedido temporal
               const existingProduct = tempOrderProducts.find((p) => p.id === product.id);
-              const currentQuantity = existingProduct ? existingProduct.quantity : 0;
+              const currentQuantity = existingProduct ? existingProduct.quantity : 1;
 
               const item = document.createElement('div');
               item.className = 'product-select-option';
@@ -4456,7 +4417,7 @@
           // === FIN DE LA MODIFICACIÓN ===
 
           // Por defecto Gasto
-          setTipoRegistro('income'); // Modificado a 'expense' como default
+          setTipoRegistro('expense'); // Modificado a 'expense' como default
 
           calculatorModal.classList.add('active');
           document.addEventListener('keydown', handleKeyboardInput);
