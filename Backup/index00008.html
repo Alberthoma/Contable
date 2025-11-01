@@ -2,10 +2,7 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0,maximum-scale=1.0,user-scalable=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Foresee Contable</title>
 
     <!-- PWA: manifest + theme-color -->
@@ -25,7 +22,7 @@
     <link
       rel="icon"
       type="image/png"
-      href="https://res.cloudinary.com/datwdagbf/image/upload/f_auto,q_auto/v1756514678/ingresos_ci7j4p.png"
+      href="https://res.cloudinary.com/datwdagbf/image/upload/v1756514685/proyeccion_hh3xyt.png"
     />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
@@ -155,10 +152,6 @@
           document.getElementById('bank-balances-grid').innerHTML = '';
           document.getElementById('category-list').innerHTML = '';
           document.getElementById('bank-list').innerHTML = '';
-          // --- INICIO: LIMPIEZA UI DE PEDIDOS ---
-          document.getElementById('product-list').innerHTML = '';
-          document.getElementById('orders-list').innerHTML = '';
-          // --- FIN: LIMPIEZA UI DE PEDIDOS ---
         }
       });
 
@@ -402,14 +395,11 @@
         text-align: center;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         border-radius: 12px;
+
         /* Añadido para Logout */
         display: flex;
         justify-content: space-between;
         align-items: center;
-        z-index: 10000;
-        margin-top: 4rem;
-        margin-bottom: 2rem;
-        display: none;
       }
 
       header h1 {
@@ -445,57 +435,20 @@
         gap: 1rem;
       }
 
-      .logo-nav {
-        background: #007bff;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 0.25rem;
-        border-radius: 100%;
-        cursor: pointer;
-        margin-right: 5rem;
-      }
-
-      .logo-nav img {
-        height: 60px;
-        width: auto;
-      }
-
       /* Navegación */
       nav {
         /*background-color: var(--medium-gray);*/
         background-color: var(--white);
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
+        padding: 0rem 1rem;
         margin-bottom: 1rem;
         border-radius: 5px;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        width: 100%;
-        z-index: 1000;
-        padding-left: 1rem;
-        padding-right: 1rem;
       }
 
       nav ul {
         list-style: none;
         display: flex;
-        justify-content: flex-start;
-        /* flex-wrap: wrap; */ /* <-- LÍNEA ORIGINAL COMENTADA */
-        flex-wrap: nowrap; /* <-- AÑADIDO: Mantiene todo en una línea */
-        gap: 0.25rem;
-        overflow-x: auto; /* <-- AÑADIDO: Permite el scroll horizontal */
-        overflow-y: hidden; /* <-- AÑADIDO: Evita el scroll vertical accidental */
-      }
-      /* Oculta la barra de scroll pero mantiene la funcionalidad */
-      nav ul::-webkit-scrollbar {
-        display: none; /* Para Chrome, Safari y Opera */
-      }
-      nav ul {
-        -ms-overflow-style: none; /* Para IE y Edge */
-        scrollbar-width: none; /* Para Firefox */
+        justify-content: center;
+        gap: 1rem;
       }
 
       nav button {
@@ -522,7 +475,6 @@
 
       /* Paneles de Contenido */
       .tab-pane {
-        margin-top: 3rem;
         display: none;
         padding-left: 1rem;
         padding-right: 1rem;
@@ -685,17 +637,11 @@
 
       /* --- CABECERA (thead) --- */
       /* Arriba-Izquierda (Aplica a ambas vistas) */
-      #transactions-table thead th:first-child,
-      #products-table thead th:first-child, /* AÑADIDO */
-      #orders-table thead th:first-child {
-        /* AÑADIDO */
+      #transactions-table thead th:first-child {
         border-top-left-radius: 8px;
       }
       /* Arriba-Derecha (MÓVIL: th "Opciones") */
-      #transactions-table thead th:last-child,
-      #products-table thead th:last-child, /* AÑADIDO */
-      #orders-table thead th:last-child {
-        /* AÑADIDO */
+      #transactions-table thead th:last-child {
         border-top-right-radius: 8px;
       }
 
@@ -722,10 +668,7 @@
       /* --- ARREGLO PARA DESKTOP (Pantallas > 768px) --- */
       @media (min-width: 769px) {
         /* Arriba-Derecha (DESKTOP: th "Acciones") */
-        #transactions-table thead th:nth-last-child(2),
-        #products-table thead th:last-child, /* AÑADIDO */
-        #orders-table thead th:last-child {
-          /* AÑADIDO */
+        #transactions-table thead th:nth-last-child(2) {
           border-top-right-radius: 8px;
         }
         /* Quitamos el radio de la celda móvil (que está oculta) */
@@ -1457,266 +1400,8 @@
       /* --- FIN: NUEVOS ESTILOS PARA EL MODAL DE SELECCIÓN DE CATEGORÍA ---
       */
 
-      /* --- INICIO: ESTILOS PEDIDOS Y PRODUCTOS --- */
-
-      /* Contenedor flexible para formularios (para poner 2 columnas en desktop) */
-      .form-container-flex {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-      }
-
-      /* Formulario simple para añadir */
-      .simple-add-form {
-        display: flex;
-        gap: 0.5rem;
-        align-items: flex-end;
-        margin-bottom: 1rem;
-        flex-wrap: wrap;
-      }
-      .simple-add-form .form-group {
-        flex-grow: 1;
-        margin-bottom: 0;
-      }
-      .simple-add-form .btn {
-        flex-shrink: 0;
-      }
-
-      /* Estilos para la lista de Pedidos */
-      #orders-list,
-      #product-list {
-        list-style: none;
-        padding: 0;
-        display: grid;
-        grid-template-columns: 1fr; /* 1 columna en móvil por defecto */
-        gap: 1rem;
-      }
-
-      .order-card,
-      .product-card {
-        background-color: var(--white);
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        box-shadow: var(--shadow);
-        padding: 1rem;
-      }
-
-      .order-card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        border-bottom: 1px solid var(--medium-gray);
-        padding-bottom: 0.75rem;
-        margin-bottom: 0.75rem;
-      }
-      .order-card-header h3 {
-        margin: 0;
-        color: var(--primary-blue-dark);
-      }
-      .order-card-status {
-        font-size: 0.8rem;
-        font-weight: 600;
-        padding: 0.25rem 0.5rem;
-        border-radius: 5px;
-        color: var(--white);
-      }
-      .status-pending {
-        background-color: var(--warning-color);
-        color: var(--text-color);
-      }
-      .status-completed {
-        background-color: var(--success-color);
-      }
-
-      .order-card-body p {
-        margin-bottom: 0.5rem;
-      }
-      .order-card-body strong {
-        color: var(--dark-gray);
-      }
-
-      .order-card-products {
-        list-style: none;
-        padding: 0.5rem 0 0 1rem;
-        font-size: 0.9rem;
-      }
-      .order-card-products li {
-        color: var(--text-color);
-      }
-
-      .order-card-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 1rem;
-        margin-top: 1rem;
-        padding-top: 1rem;
-        border-top: 1px solid var(--medium-gray);
-      }
-
-      .order-total {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: var(--primary-blue);
-      }
-
-      /* Checkbox de confirmación de entrega */
-      .confirm-delivery-container {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        background-color: var(--success-light);
-        padding: 0.5rem 0.75rem;
-        border-radius: 5px;
-        border: 1px solid var(--success-color);
-      }
-      .confirm-delivery-container label {
-        margin: 0;
-        color: var(--success-color);
-        font-weight: 600;
-        cursor: pointer;
-      }
-      .confirm-delivery-container input[type='checkbox'] {
-        margin: 0;
-        width: 18px;
-        height: 18px;
-      }
-
-      /* Estilos para la lista de Productos (en Configuración) */
-      .product-card {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      .product-info {
-        flex-grow: 1;
-      }
-      .product-info h4 {
-        margin: 0;
-        color: var(--primary-blue-dark);
-      }
-      .product-info p {
-        margin: 0;
-        color: var(--dark-gray);
-        font-size: 0.9rem;
-      }
-      .product-price {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: var(--success-color);
-        margin-left: 1rem;
-      }
-      .product-actions {
-        flex-shrink: 0;
-        margin-left: 1rem;
-      }
-
-      /* Notificaciones en Dashboard */
-      #dashboard-notificaciones {
-        background-color: var(--warning-color);
-        border: 1px solid #ffc107;
-        border-radius: 5px;
-        padding: 1rem;
-        margin-bottom: 1rem;
-        background-color: #fff3cd;
-        border-color: #ffeeba;
-        color: #856404;
-      }
-      #dashboard-notificaciones h3 {
-        margin: 0 0 0.5rem 0;
-        color: #856404;
-      }
-      #upcoming-deliveries-list {
-        list-style: none;
-        padding: 0;
-      }
-      #upcoming-deliveries-list li {
-        padding: 0.25rem 0;
-        border-bottom: 1px solid #ffeeba;
-      }
-      #upcoming-deliveries-list li:last-child {
-        border-bottom: none;
-      }
-
-      /* Modal de Selección de Productos */
-      #product-select-modal .modal-content {
-        max-width: 450px;
-      }
-      #product-select-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 0.75rem;
-        max-height: 60vh;
-        overflow-y: auto;
-      }
-      .product-select-option {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.75rem;
-        border-radius: 8px;
-        border: 1px solid var(--border-color);
-        background-color: var(--light-gray);
-        cursor: pointer;
-        transition: all 0.2s;
-      }
-      .product-select-option:hover {
-        border-color: var(--primary-blue);
-        box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
-      }
-      .product-select-option-info h4 {
-        margin: 0;
-        font-size: 1rem;
-        color: var(--text-color);
-      }
-      .product-select-option-info p {
-        margin: 0;
-        font-size: 0.9rem;
-        color: var(--success-color);
-        font-weight: 500;
-      }
-      .product-select-option input[type='number'] {
-        width: 60px;
-        padding: 0.25rem 0.5rem;
-        font-size: 0.9rem;
-        text-align: center;
-        margin-left: 0.5rem;
-      }
-      .product-select-option .btn {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.8rem;
-        margin-left: 0.5rem;
-      }
-
-      /* Layout responsive para formularios */
-      @media (min-width: 769px) {
-        .form-container-flex {
-          flex-direction: row;
-        }
-        .form-container-flex > div {
-          flex: 1; /* Ambas columnas ocupan el 50% */
-        }
-
-        #orders-list {
-          grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-        }
-
-        #product-list {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      /* --- FIN: ESTILOS PEDIDOS Y PRODUCTOS --- */
-
       /* Media Queries (Modificado) */
       @media (max-width: 768px) {
-        .logo-nav {
-          margin-right: 5rem;
-          display: none;
-        }
-        .tab-pane {
-          margin-top: 5rem;
-        }
         /* Ajuste para que el header de Auth no desaparezca en móvil */
         #auth-container {
           background-color: var(--white);
@@ -1751,6 +1436,7 @@
         }
 
         nav ul {
+          flex-wrap: wrap;
           gap: 0.5rem;
         }
         nav button {
@@ -1923,14 +1609,6 @@
       <div class="container">
         <nav>
           <ul id="tabs">
-            <li class="logo-nav">
-              <img
-                src="https://res.cloudinary.com/datwdagbf/image/upload/v1756514680/logo_jkwegt.png"
-                alt="Logo"
-                class="logotipo"
-              />
-            </li>
-            <!-- Pestaña Registros -->
             <li>
               <button class="tab-button active" data-tab="registros">
                 <img
@@ -1940,52 +1618,24 @@
                 <span>Registros</span>
               </button>
             </li>
-            <!-- Pestaña Saldos -->
             <li>
-              <button class="tab-button" data-tab="saldos">
+              <button class="tab-button active" data-tab="saldos">
                 <img
                   src="https://res.cloudinary.com/datwdagbf/image/upload/v1756889458/AA7C0FC4-9F29-48D3-BA63-CDF884DA716B_uwkqfp.png"
-                  alt="Icono Saldos"
+                  alt="Icono Registros"
                 />
                 <span>Saldos</span>
               </button>
             </li>
-
-            <!-- INICIO: NUEVA PESTAÑA PEDIDOS -->
             <li>
-              <button class="tab-button" data-tab="pedidos">
-                <img
-                  src="https://res.cloudinary.com/datwdagbf/image/upload/v1761948696/Pedidos_kccmsd.png"
-                  alt="Icono Pedidos"
-                />
-                <span>Pedidos</span>
-              </button>
-            </li>
-            <!-- FIN: NUEVA PESTAÑA PEDIDOS -->
-
-            <!-- INICIO: NUEVA PESTAÑA PRODUCTOS -->
-            <li>
-              <button class="tab-button" data-tab="productos">
-                <img
-                  src="https://res.cloudinary.com/datwdagbf/image/upload/v1761948696/cake_yvpgrk.png"
-                  alt="Icono Productos"
-                />
-                <span>Productos</span>
-              </button>
-            </li>
-            <!-- FIN: NUEVA PESTAÑA PRODUCTOS -->
-
-            <!-- Pestaña Configuración -->
-            <li>
-              <button class="tab-button" data-tab="configuracion">
+              <button class="tab-button active" data-tab="configuracion">
                 <img
                   src="https://res.cloudinary.com/datwdagbf/image/upload/f_auto,q_auto/v1756514668/configuracion_puo2ap.png"
-                  alt="Icono Configuración"
+                  alt="Icono Registros"
                 />
                 <span>Configuración</span>
               </button>
             </li>
-            <!-- Pestaña Salir -->
             <li>
               <button id="logout-btn-nav" class="tab-button">
                 <img
@@ -1999,19 +1649,10 @@
         </nav>
 
         <main id="main-content">
-          <!-- Sección Registros (Modificada) -->
+          <!-- Sección Registros (Sin cambios de HTML) -->
           <div id="registros-content" class="tab-pane active">
             <h2>Transacciones</h2>
-
-            <!-- INICIO: NOTIFICACIONES DE PEDIDOS -->
-            <div id="dashboard-notificaciones" class="hidden">
-              <h3>Próximas Entregas</h3>
-              <ul id="upcoming-deliveries-list">
-                <!-- Se llenará con JS -->
-              </ul>
-            </div>
-            <!-- FIN: NOTIFICACIONES DE PEDIDOS -->
-
+            <!-- ESTE BOTÓN AHORA ABRIRÁ EL NUEVO MODAL DE CALCULADORA -->
             <button class="btn btn-primary" id="add-transaction-btn">Añadir Transacción</button>
 
             <button class="btn" id="toggle-filters-btn">
@@ -2097,116 +1738,6 @@
               Añade bancos en Configuración y registra transacciones para ver los saldos.
             </p>
           </div>
-
-          <!-- INICIO: NUEVA SECCIÓN PRODUCTOS -->
-          <div id="productos-content" class="tab-pane">
-            <h2>Gestión de Productos</h2>
-
-            <div class="config-section">
-              <h3>Añadir Nuevo Producto</h3>
-              <form id="add-product-form" class="simple-add-form">
-                <div class="form-group">
-                  <label for="new-product-name">Nombre</label>
-                  <input
-                    type="text"
-                    id="new-product-name"
-                    placeholder="Nombre del producto"
-                    required
-                  />
-                  <span class="input-error-message" id="new-product-name-error"></span>
-                </div>
-                <div class="form-group" style="flex-grow: 0.5">
-                  <label for="new-product-price">Precio (USD)</label>
-                  <input
-                    type="number"
-                    id="new-product-price"
-                    placeholder="0.00"
-                    step="0.01"
-                    required
-                  />
-                  <span class="input-error-message" id="new-product-price-error"></span>
-                </div>
-                <!-- <div class="form-group" style="flex-grow: 0.3">
-                  <label for="new-product-stock">Stock</label>
-                  <input type="number" id="new-product-stock" placeholder="0" step="1" />
-                </div> -->
-                <button type="submit" class="btn btn-primary">Añadir Producto</button>
-              </form>
-            </div>
-
-            <div class="config-section">
-              <h3>Mis Productos</h3>
-              <ul id="product-list">
-                <!-- Los productos se cargarán aquí -->
-              </ul>
-              <p id="no-products-message" class="no-data-message hidden">
-                No hay productos añadidos.
-              </p>
-            </div>
-          </div>
-          <!-- FIN: NUEVA SECCIÓN PRODUCTOS -->
-
-          <!-- INICIO: NUEVA SECCIÓN PEDIDOS -->
-          <div id="pedidos-content" class="tab-pane">
-            <h2>Gestión de Pedidos</h2>
-
-            <div class="form-container-flex">
-              <!-- Columna 1: Crear Pedido -->
-              <div class="config-section">
-                <h3>Crear Nuevo Pedido</h3>
-                <form id="create-order-form">
-                  <input type="hidden" id="order-id" />
-                  <div class="form-group">
-                    <label for="order-customer-name">Nombre del Cliente</label>
-                    <input type="text" id="order-customer-name" required />
-                    <span class="input-error-message" id="order-customer-name-error"></span>
-                  </div>
-                  <div class="form-group">
-                    <label for="order-delivery-date">Fecha de Entrega</label>
-                    <input type="date" id="order-delivery-date" required />
-                    <span class="input-error-message" id="order-delivery-date-error"></span>
-                  </div>
-
-                  <!-- Productos del pedido actual -->
-                  <h4>Productos en este Pedido</h4>
-                  <ul
-                    id="current-order-products-list"
-                    class="config-list"
-                    style="max-height: 150px"
-                  >
-                    <!-- Productos seleccionados para el nuevo pedido -->
-                  </ul>
-                  <p id="no-current-order-products" class="no-data-message" style="padding: 1rem 0">
-                    Añade productos al pedido
-                  </p>
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    id="open-product-select-modal-btn"
-                    style="width: 100%; margin: 0.5rem 0"
-                  >
-                    Añadir/Editar Productos
-                  </button>
-
-                  <button type="submit" class="btn btn-primary" style="width: 100%">
-                    Guardar Pedido
-                  </button>
-                </form>
-              </div>
-
-              <!-- Columna 2: Pedidos Pendientes -->
-              <div class="config-section">
-                <h3>Pedidos Pendientes</h3>
-                <ul id="orders-list">
-                  <!-- Los pedidos se cargarán aquí -->
-                </ul>
-                <p id="no-orders-message" class="no-data-message hidden">
-                  No hay pedidos pendientes.
-                </p>
-              </div>
-            </div>
-          </div>
-          <!-- FIN: NUEVA SECCIÓN PEDIDOS -->
 
           <!-- Sección Configuración (Sin cambios de HTML) -->
           <div id="configuracion-content" class="tab-pane">
@@ -2484,30 +2015,6 @@
       </div>
     </div>
 
-    <!-- INICIO: NUEVO MODAL SELECCIÓN DE PRODUCTOS -->
-    <div id="product-select-modal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2>Añadir Productos al Pedido</h2>
-          <button class="close-btn" id="close-product-select-modal-btn">&times;</button>
-        </div>
-        <div class="modal-body">
-          <div id="product-select-grid">
-            <!-- Productos para seleccionar se cargarán aquí -->
-          </div>
-          <p id="no-products-to-select-message" class="no-data-message hidden">
-            No hay productos definidos. Añade productos en la pestaña 'Productos'.
-          </p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" id="confirm-product-selection-btn">
-            Confirmar Productos
-          </button>
-        </div>
-      </div>
-    </div>
-    <!-- FIN: NUEVO MODAL SELECCIÓN DE PRODUCTOS -->
-
     <!-- Modal Confirmación -->
     <div id="confirm-modal" class="modal">
       <div class="modal-content" style="max-width: 400px">
@@ -2574,7 +2081,7 @@
     </div>
 
     <footer>
-      <p>&copy; 2025 Gestor Financiero 00009</p>
+      <p>&copy; 2025 Gestor Financiero 00008</p>
     </footer>
 
     <!-- PWA: Registro del Service Worker -->
@@ -2623,10 +2130,6 @@
         const transactionsCol = collection(db, 'artifacts', appId, 'users', userId, 'transactions');
         // Usamos un solo documento para guardar las configuraciones (bancos y categorías)
         const settingsDoc = doc(db, 'artifacts', appId, 'users', userId, 'appData', 'settings');
-        // --- INICIO: NUEVAS COLECCIONES ---
-        const productsCol = collection(db, 'artifacts', appId, 'users', userId, 'products');
-        const ordersCol = collection(db, 'artifacts', appId, 'users', userId, 'orders');
-        // --- FIN: NUEVAS COLECCIONES ---
 
         // Constantes (igual que antes)
         const DEFAULT_ICON =
@@ -2664,11 +2167,6 @@
         let localTransactions = [];
         let localCategories = [];
         let localBanks = [];
-        // --- INICIO: NUEVOS ESTADOS LOCALES ---
-        let localProducts = [];
-        let localOrders = [];
-        let tempOrderProducts = []; // Para el formulario de nuevo pedido
-        // --- FIN: NUEVOS ESTADOS LOCALES ---
 
         let confirmCallback = null;
         let currentMobileTxId = null;
@@ -2752,34 +2250,6 @@
           'close-category-select-modal-btn',
         );
         // --- FIN: NUEVOS SELECTORES ---
-
-        // --- INICIO: NUEVOS SELECTORES DE PRODUCTOS Y PEDIDOS ---
-        const addProductForm = document.getElementById('add-product-form');
-        const newProductNameInput = document.getElementById('new-product-name');
-        const newProductPriceInput = document.getElementById('new-product-price');
-        const productList = document.getElementById('product-list');
-        const noProductsMessage = document.getElementById('no-products-message');
-
-        const createOrderForm = document.getElementById('create-order-form');
-        const orderCustomerNameInput = document.getElementById('order-customer-name');
-        const orderDeliveryDateInput = document.getElementById('order-delivery-date');
-        const currentOrderProductsList = document.getElementById('current-order-products-list');
-        const noCurrentOrderProducts = document.getElementById('no-current-order-products');
-        const openProductSelectModalBtn = document.getElementById('open-product-select-modal-btn');
-        const ordersList = document.getElementById('orders-list');
-        const noOrdersMessage = document.getElementById('no-orders-message');
-
-        const productSelectModal = document.getElementById('product-select-modal');
-        const productSelectGrid = document.getElementById('product-select-grid');
-        const noProductsToSelectMessage = document.getElementById('no-products-to-select-message');
-        const confirmProductSelectionBtn = document.getElementById('confirm-product-selection-btn');
-        const closeProductSelectModalBtn = document.getElementById(
-          'close-product-select-modal-btn',
-        );
-
-        const dashboardNotificaciones = document.getElementById('dashboard-notificaciones');
-        const upcomingDeliveriesList = document.getElementById('upcoming-deliveries-list');
-        // --- FIN: NUEVOS SELECTORES DE PRODUCTOS Y PEDIDOS ---
 
         // --- Carga/Guardado de Datos (AHORA CON FIRESTORE) ---
 
@@ -2885,49 +2355,9 @@
             },
           );
 
-          // --- INICIO: NUEVOS LISTENERS (PRODUCTOS Y PEDIDOS) ---
-
-          // 3. Listener para Productos
-          const qProducts = query(productsCol);
-          const unsubscribeProducts = onSnapshot(
-            qProducts,
-            (snapshot) => {
-              console.log('Datos de productos recibidos de Firestore.');
-              localProducts = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-              renderProductsList(); // Renderizar la lista de productos
-            },
-            (error) => {
-              console.error('Error al escuchar productos:', error);
-              showMessageModal('Error de Red', 'No se pudieron cargar los productos.', 'error');
-            },
-          );
-
-          // 4. Listener para Pedidos
-          const qOrders = query(ordersCol);
-          const unsubscribeOrders = onSnapshot(
-            qOrders,
-            (snapshot) => {
-              console.log('Datos de pedidos recibidos de Firestore.');
-              localOrders = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-              renderOrdersList(); // Renderizar la lista de pedidos
-              renderUpcomingDeliveries(); // Actualizar el dashboard
-            },
-            (error) => {
-              console.error('Error al escuchar pedidos:', error);
-              showMessageModal('Error de Red', 'No se pudieron cargar los pedidos.', 'error');
-            },
-          );
-
-          // --- FIN: NUEVOS LISTENERS ---
-
           // Guardamos las funciones 'unsubscribe' para llamarlas al hacer logout
           // (Esto es una variable global definida en el script de Auth)
-          window.firestoreListeners = [
-            unsubscribeTransactions,
-            unsubscribeSettings,
-            unsubscribeProducts, // AÑADIDO
-            unsubscribeOrders, // AÑADIDO
-          ];
+          window.firestoreListeners = [unsubscribeTransactions, unsubscribeSettings];
         }
 
         // Ya no necesitamos saveDataToLocalStorage.
@@ -2956,6 +2386,10 @@
           switchTab('registros'); // Mostrar la primera pestaña
         }
         initAppWithFirebase(); // Llamar a la inicialización
+
+        // --- Renderizado General ---
+        // (Esta función ya no es necesaria, los listeners se encargan)
+        // function renderAllUI() { ... }
 
         // --- Manejo de Pestañas (sin cambios) ---
         function switchTab(tabId) {
@@ -3004,7 +2438,6 @@
               noTransactionsMessage.textContent = 'No hay transacciones registradas.';
             }
             noTransactionsMessage.classList.remove('hidden');
-            // MODIFICADO: No ocultar la tabla, sino el tbody
             transactionsTableBody.parentElement.style.display = 'none';
           } else {
             noTransactionsMessage.classList.add('hidden');
@@ -3517,32 +2950,25 @@
         async function deleteAllData() {
           openConfirmModal(
             'Borrar Todos los Datos',
-            '¡ADVERTENCIA! Esto eliminará permanentemente TODAS las transacciones, categorías, bancos, productos y pedidos de tu cuenta. Esta acción no se puede deshacer. ¿Continuar?',
+            '¡ADVERTENCIA! Esto eliminará permanentemente TODAS las transacciones, categorías y bancos de tu cuenta. Esta acción no se puede deshacer. ¿Continuar?',
             async () => {
               showLoading();
               try {
                 // Para borrar todos los datos, borramos las transacciones (en lote)
                 // y reseteamos el documento de settings.
-                // AHORA TAMBIÉN BORRAMOS PRODUCTOS Y PEDIDOS
-
-                const batch = writeBatch(db);
 
                 // 1. Borrar todas las transacciones
-                const qTx = query(transactionsCol);
-                const txSnapshot = await getDocs(qTx);
-                txSnapshot.forEach((doc) => batch.delete(doc.ref));
+                const batch = writeBatch(db);
+                const q = query(transactionsCol);
+                const querySnapshot = await getDocs(q);
 
-                // 2. Borrar todos los productos
-                const qProd = query(productsCol);
-                const prodSnapshot = await getDocs(qProd);
-                prodSnapshot.forEach((doc) => batch.delete(doc.ref));
+                querySnapshot.forEach((doc) => {
+                  batch.delete(doc.ref); // Añadir cada borrado al lote
+                });
 
-                // 3. Borrar todos los pedidos
-                const qOrd = query(ordersCol);
-                const ordSnapshot = await getDocs(qOrd);
-                ordSnapshot.forEach((doc) => batch.delete(doc.ref));
-
-                // 4. Resetear (o borrar) el documento de settings
+                // 2. Resetear (o borrar) el documento de settings
+                // Es más fácil resetearlo que borrarlo, así el usuario
+                // empieza de nuevo con los valores por defecto.
                 const defaultCategories = [
                   {
                     name: 'Compras',
@@ -3577,7 +3003,7 @@
                   banks: defaultBanks,
                 });
 
-                // 5. Ejecutar el lote
+                // 3. Ejecutar el lote
                 await batch.commit();
 
                 // onSnapshot se encargará de actualizar la UI a los valores por defecto
@@ -3604,460 +3030,6 @@
             },
           );
         }
-
-        // --- INICIO: LÓGICA DE PRODUCTOS Y PEDIDOS ---
-
-        // --- PRODUCTOS ---
-
-        /**
-         * Renderiza la lista de productos en la pestaña 'Productos'.
-         */
-        function renderProductsList() {
-          productList.innerHTML = '';
-          if (localProducts.length === 0) {
-            noProductsMessage.classList.remove('hidden');
-          } else {
-            noProductsMessage.classList.add('hidden');
-            const sortedProducts = [...localProducts].sort((a, b) => a.name.localeCompare(b.name));
-
-            sortedProducts.forEach((product) => {
-              const card = document.createElement('li');
-              card.className = 'product-card';
-              card.innerHTML = `
-              <div class="product-info">
-                <h4>${product.name}</h4>
-                <!-- <p>Stock: ${product.stock || 0}</p> -->
-              </div>
-              <span class="product-price">${formatCurrency(product.price)}</span>
-              <div class="product-actions">
-                <button class="btn-icon delete-product-btn" title="Eliminar Producto" data-id="${
-                  product.id
-                }">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></svg>
-                </button>
-              </div>
-            `;
-              card
-                .querySelector('.delete-product-btn')
-                .addEventListener('click', () => deleteProduct(product.id, product.name));
-              productList.appendChild(card);
-            });
-          }
-        }
-
-        /**
-         * Maneja el envío del formulario para añadir un nuevo producto.
-         */
-        async function handleAddProduct(event) {
-          event.preventDefault();
-          clearValidationErrors();
-          let isValid = true;
-          const name = newProductNameInput.value.trim();
-          const price = parseFloat(newProductPriceInput.value);
-
-          if (
-            !validateRequired(
-              newProductNameInput,
-              document.getElementById('new-product-name-error'),
-              'El nombre es obligatorio.',
-            )
-          )
-            isValid = false;
-          if (
-            !validatePositiveNumber(
-              newProductPriceInput,
-              document.getElementById('new-product-price-error'),
-              'El precio debe ser un número positivo.',
-            )
-          )
-            isValid = false;
-
-          if (!isValid) return;
-
-          const newProduct = {
-            name: toTitleCase(name),
-            price: price,
-            // stock: parseInt(document.getElementById('new-product-stock').value) || 0
-          };
-
-          showLoading();
-          try {
-            await addDoc(productsCol, newProduct);
-            showToast('Producto añadido');
-            addProductForm.reset();
-            // onSnapshot se encargará de actualizar la UI
-          } catch (error) {
-            console.error('Error añadiendo producto:', error);
-            showMessageModal('Error', 'No se pudo añadir el producto.', 'error');
-          } finally {
-            hideLoading();
-          }
-        }
-
-        /**
-         * Elimina un producto de Firestore.
-         */
-        function deleteProduct(productId, productName) {
-          openConfirmModal(
-            'Eliminar Producto',
-            `¿Seguro que quieres eliminar "${productName}"?`,
-            async () => {
-              showLoading();
-              try {
-                const prodDoc = doc(db, 'artifacts', appId, 'users', userId, 'products', productId);
-                await deleteDoc(prodDoc);
-                showToast('Producto eliminado');
-                // onSnapshot se encargará de actualizar la UI
-              } catch (error) {
-                console.error('Error borrando producto:', error);
-                showMessageModal('Error', 'No se pudo eliminar el producto.', 'error');
-              } finally {
-                hideLoading();
-              }
-            },
-          );
-        }
-
-        // --- PEDIDOS ---
-
-        /**
-         * Renderiza la lista de pedidos pendientes.
-         */
-        function renderOrdersList() {
-          ordersList.innerHTML = '';
-          const pendingOrders = localOrders
-            .filter((order) => order.status === 'pending')
-            .sort((a, b) => new Date(a.deliveryDate) - new Date(b.deliveryDate));
-
-          if (pendingOrders.length === 0) {
-            noOrdersMessage.classList.remove('hidden');
-          } else {
-            noOrdersMessage.classList.add('hidden');
-            pendingOrders.forEach((order) => {
-              const card = document.createElement('li');
-              card.className = 'order-card';
-              card.dataset.id = order.id;
-
-              const productsHtml = order.products
-                .map((p) => `<li>${p.quantity} x ${p.name} (${formatCurrency(p.price)})</li>`)
-                .join('');
-
-              card.innerHTML = `
-              <div class="order-card-header">
-                <div>
-                  <h3>${order.customerName}</h3>
-                  <span>Entrega: ${formatDate(order.deliveryDate)}</span>
-                </div>
-                <span class="order-card-status status-${order.status}">
-                  ${order.status === 'pending' ? 'Pendiente' : 'Completado'}
-                </span>
-              </div>
-              <div class="order-card-body">
-                <strong>Productos:</strong>
-                <ul class="order-card-products">${productsHtml}</ul>
-              </div>
-              <div class="order-card-footer">
-                <span class="order-total">Total: ${formatCurrency(order.totalAmount)}</span>
-                <div class="confirm-delivery-container">
-                  <input type="checkbox" id="confirm-${order.id}" data-id="${order.id}" />
-                  <label for="confirm-${order.id}">Entregado</label>
-                </div>
-              </div>
-            `;
-
-              // --- INICIO DE LA CORRECCIÓN ---
-              // 1. Buscamos el checkbox específico que acabamos de crear en el innerHTML
-              const confirmCheckbox = card.querySelector(`#confirm-${order.id}`);
-
-              // 2. Verificamos que existe (buena práctica) y añadimos el listener
-              if (confirmCheckbox) {
-                confirmCheckbox.addEventListener('change', (e) =>
-                  handleConfirmDelivery(e.target.dataset.id),
-                );
-              }
-              // --- FIN DE LA CORRECCIÓN ---
-
-              // Ahora esta línea SÍ se ejecutará porque el error fue corregido
-              ordersList.appendChild(card);
-            });
-          }
-        }
-
-        /**
-         * Renderiza el widget de próximas entregas en el dashboard.
-         */
-        function renderUpcomingDeliveries() {
-          upcomingDeliveriesList.innerHTML = '';
-          const today = new Date();
-          const twoDaysFromNow = new Date();
-          twoDaysFromNow.setDate(today.getDate() + 2);
-
-          const upcoming = localOrders
-            .filter((order) => {
-              const deliveryDate = new Date(order.deliveryDate + 'T00:00:00Z');
-              return (
-                order.status === 'pending' &&
-                deliveryDate >= today &&
-                deliveryDate <= twoDaysFromNow
-              );
-            })
-            .sort((a, b) => new Date(a.deliveryDate) - new Date(b.deliveryDate));
-
-          if (upcoming.length === 0) {
-            dashboardNotificaciones.classList.add('hidden');
-          } else {
-            dashboardNotificaciones.classList.remove('hidden');
-            upcoming.forEach((order) => {
-              const li = document.createElement('li');
-              li.innerHTML = `
-              <strong>${formatDate(order.deliveryDate)}:</strong> ${order.customerName}
-            `;
-              upcomingDeliveriesList.appendChild(li);
-            });
-          }
-        }
-
-        /**
-         * Maneja la creación o actualización de un pedido.
-         */
-        async function handleCreateOrder(event) {
-          event.preventDefault();
-          clearValidationErrors();
-          let isValid = true;
-          const customerName = orderCustomerNameInput.value.trim();
-          const deliveryDate = orderDeliveryDateInput.value;
-
-          if (
-            !validateRequired(
-              orderCustomerNameInput,
-              document.getElementById('order-customer-name-error'),
-              'El nombre del cliente es obligatorio.',
-            )
-          )
-            isValid = false;
-          if (
-            !validateRequired(
-              orderDeliveryDateInput,
-              document.getElementById('order-delivery-date-error'),
-              'La fecha de entrega es obligatoria.',
-            )
-          )
-            isValid = false;
-          if (tempOrderProducts.length === 0) {
-            showMessageModal('Error', 'Debes añadir al menos un producto al pedido.', 'error');
-            isValid = false;
-          }
-
-          if (!isValid) return;
-
-          const totalAmount = tempOrderProducts.reduce((sum, p) => sum + p.price * p.quantity, 0);
-
-          const orderData = {
-            customerName: toTitleCase(customerName),
-            deliveryDate: deliveryDate,
-            status: 'pending', // 'pending' o 'completed'
-            products: tempOrderProducts,
-            totalAmount: totalAmount,
-            createdAt: serverTimestamp(),
-          };
-
-          showLoading();
-          try {
-            await addDoc(ordersCol, orderData);
-            showToast('Pedido creado');
-            resetOrderForm();
-            // onSnapshot se encargará de actualizar la UI
-          } catch (error) {
-            console.error('Error creando pedido:', error);
-            showMessageModal('Error', 'No se pudo crear el pedido.', 'error');
-          } finally {
-            hideLoading();
-          }
-        }
-
-        /**
-         * Resetea el formulario de crear pedido.
-         */
-        function resetOrderForm() {
-          createOrderForm.reset();
-          tempOrderProducts = [];
-          renderCurrentOrderProducts();
-        }
-
-        /**
-         * Abre el modal para seleccionar productos para un pedido.
-         */
-        function openProductSelectModal() {
-          productSelectGrid.innerHTML = '';
-          if (localProducts.length === 0) {
-            noProductsToSelectMessage.classList.remove('hidden');
-            productSelectGrid.classList.add('hidden');
-          } else {
-            noProductsToSelectMessage.classList.add('hidden');
-            productSelectGrid.classList.remove('hidden');
-
-            const sortedProducts = [...localProducts].sort((a, b) => a.name.localeCompare(b.name));
-            sortedProducts.forEach((product) => {
-              // Buscar si este producto ya está en el pedido temporal
-              const existingProduct = tempOrderProducts.find((p) => p.id === product.id);
-              const currentQuantity = existingProduct ? existingProduct.quantity : 1;
-
-              const item = document.createElement('div');
-              item.className = 'product-select-option';
-              item.dataset.id = product.id;
-              item.dataset.name = product.name;
-              item.dataset.price = product.price;
-              item.innerHTML = `
-              <div class="product-select-option-info">
-                <h4>${product.name}</h4>
-                <p>${formatCurrency(product.price)}</p>
-              </div>
-              <div>
-                <input type="number" class="product-quantity-input" value="${currentQuantity}" min="1" step="1" />
-                <button type="button" class="btn btn-primary add-product-to-order-btn">Añadir</button>
-              </div>
-            `;
-              item.querySelector('.add-product-to-order-btn').addEventListener('click', (e) => {
-                const btn = e.currentTarget;
-                const quantity = parseInt(item.querySelector('.product-quantity-input').value, 10);
-                if (quantity > 0) {
-                  addProductToTempOrder(product.id, product.name, product.price, quantity);
-                  btn.textContent = 'Añadido';
-                  btn.disabled = true;
-                  setTimeout(() => {
-                    btn.textContent = 'Añadir';
-                    btn.disabled = false;
-                  }, 1000);
-                }
-              });
-              productSelectGrid.appendChild(item);
-            });
-          }
-          productSelectModal.classList.add('active');
-        }
-
-        /**
-         * Añade un producto (con cantidad) a la lista temporal del pedido.
-         */
-        function addProductToTempOrder(id, name, price, quantity) {
-          const existingIndex = tempOrderProducts.findIndex((p) => p.id === id);
-          if (existingIndex > -1) {
-            // Si ya existe, actualiza la cantidad
-            tempOrderProducts[existingIndex].quantity = quantity;
-          } else {
-            // Si no, añádelo
-            tempOrderProducts.push({ id, name, price, quantity });
-          }
-          console.log('Productos temporales:', tempOrderProducts);
-        }
-
-        /**
-         * Confirma la selección de productos y actualiza la lista en el formulario.
-         */
-        function confirmProductSelection() {
-          // Primero, recorremos la grilla por si se cambió una cantidad sin pulsar "Añadir"
-          productSelectGrid.querySelectorAll('.product-select-option').forEach((item) => {
-            const id = item.dataset.id;
-            const name = item.dataset.name;
-            const price = parseFloat(item.dataset.price);
-            const quantity = parseInt(item.querySelector('.product-quantity-input').value, 10);
-            // Añadimos/actualizamos todos los que tengan cantidad > 0
-            if (quantity > 0) {
-              addProductToTempOrder(id, name, price, quantity);
-            }
-          });
-
-          // Filtramos por si alguno se quedó con 0
-          tempOrderProducts = tempOrderProducts.filter((p) => p.quantity > 0);
-
-          renderCurrentOrderProducts();
-          productSelectModal.classList.remove('active');
-        }
-
-        /**
-         * Muestra los productos en `tempOrderProducts` en el formulario de pedido.
-         */
-        function renderCurrentOrderProducts() {
-          currentOrderProductsList.innerHTML = '';
-          if (tempOrderProducts.length === 0) {
-            noCurrentOrderProducts.classList.remove('hidden');
-          } else {
-            noCurrentOrderProducts.classList.add('hidden');
-            let total = 0;
-            tempOrderProducts.forEach((p) => {
-              const li = document.createElement('li');
-              li.textContent = `${p.quantity} x ${p.name} - ${formatCurrency(
-                p.price * p.quantity,
-              )}`;
-              currentOrderProductsList.appendChild(li);
-              total += p.price * p.quantity;
-            });
-            // Añadir un total
-            const totalLi = document.createElement('li');
-            totalLi.style.fontWeight = '600';
-            totalLi.style.borderTop = '1px solid var(--border-color)';
-            totalLi.style.marginTop = '0.5rem';
-            totalLi.style.paddingTop = '0.5rem';
-            totalLi.textContent = `Total: ${formatCurrency(total)}`;
-            currentOrderProductsList.appendChild(totalLi);
-          }
-        }
-
-        /**
-         * ¡LA AUTOMATIZACIÓN! Confirma la entrega, actualiza el pedido y crea la transacción de venta.
-         */
-        async function handleConfirmDelivery(orderId) {
-          const order = localOrders.find((o) => o.id === orderId);
-          if (!order) {
-            showMessageModal('Error', 'No se encontró el pedido.', 'error');
-            return;
-          }
-
-          // 1. Preparar la transacción de venta
-          const today = new Date().toISOString().split('T')[0]; // Fecha de hoy en YYYY-MM-DD
-          const newTransaction = {
-            type: 'income',
-            date: today,
-            description: `Venta Pedido: ${order.customerName}`,
-            category: 'Ventas', // ¡Importante! Debe existir esta categoría
-            bank: 'Efectivo', // O un banco por defecto. TODO: Preguntar al usuario
-            amount: order.totalAmount,
-            createdAt: serverTimestamp(),
-            linkedOrderId: orderId, // Enlace al pedido
-          };
-
-          showLoading();
-          try {
-            // Usamos un lote para asegurar que ambas operaciones se hagan
-            const batch = writeBatch(db);
-
-            // Operación 1: Actualizar el estado del pedido
-            const orderDoc = doc(db, 'artifacts', appId, 'users', userId, 'orders', orderId);
-            batch.update(orderDoc, { status: 'completed' });
-
-            // Operación 2: Añadir la nueva transacción de venta
-            // Corrección: addDoc es para una colección, no para un batch.
-            // Para un batch, se necesita una referencia de documento nueva.
-            // ¡Corrección 2! addDoc NO se puede usar en batch. Se usa SET en un doc nuevo.
-            const newTransactionRef = doc(
-              collection(db, 'artifacts', appId, 'users', userId, 'transactions'),
-            );
-            batch.set(newTransactionRef, newTransaction);
-
-            // Ejecutar el lote
-            await batch.commit();
-
-            showToast('¡Entrega confirmada! Venta registrada.');
-            // onSnapshot se encargará de actualizar la UI (quitar el pedido de pendientes y añadir la transacción)
-          } catch (error) {
-            console.error('Error al confirmar entrega:', error);
-            showMessageModal('Error', 'No se pudo confirmar la entrega.', 'error');
-          } finally {
-            hideLoading();
-          }
-        }
-
-        // --- FIN: LÓGICA DE PRODUCTOS Y PEDIDOS ---
 
         // --- Utilidades (sin cambios relevantes) ---
         function showLoading() {
@@ -4372,19 +3344,6 @@
             }
             closeMobileActionsModal();
           });
-
-          // --- INICIO: NUEVOS LISTENERS DE PRODUCTOS Y PEDIDOS ---
-          addProductForm.addEventListener('submit', handleAddProduct);
-          createOrderForm.addEventListener('submit', handleCreateOrder);
-          openProductSelectModalBtn.addEventListener('click', openProductSelectModal);
-          closeProductSelectModalBtn.addEventListener('click', () =>
-            productSelectModal.classList.remove('active'),
-          );
-          productSelectModal.addEventListener('click', (e) => {
-            if (e.target === productSelectModal) productSelectModal.classList.remove('active');
-          });
-          confirmProductSelectionBtn.addEventListener('click', confirmProductSelection);
-          // --- FIN: NUEVOS LISTENERS DE PRODUCTOS Y PEDIDOS ---
         }
 
         // --- INICIO: NUEVAS FUNCIONES PARA EL MODAL DE CALCULADORA ---
@@ -4417,7 +3376,7 @@
           // === FIN DE LA MODIFICACIÓN ===
 
           // Por defecto Gasto
-          setTipoRegistro('expense'); // Modificado a 'expense' como default
+          setTipoRegistro('income');
 
           calculatorModal.classList.add('active');
           document.addEventListener('keydown', handleKeyboardInput);
@@ -4471,12 +3430,7 @@
          */
         function handleKeyboardInput(event) {
           // Si el usuario está escribiendo en el campo de comentario, no hacemos nada
-          if (
-            event.target === comentarioInput ||
-            event.target === newProductNameInput ||
-            event.target === newProductPriceInput ||
-            event.target === orderCustomerNameInput
-          ) {
+          if (event.target === comentarioInput) {
             return;
           }
           // Prevenimos que la tecla haga su acción por defecto (ej. escribir en la pág)
@@ -4579,7 +3533,7 @@
           }
           closeCalculatorModal();
           // Resetear y cerrar modal de calculadora
-          // calculatorModal.classList.remove('active'); //<- closeCalculatorModal() ya lo hace
+          calculatorModal.classList.remove('active');
           currentCalculatorExpression = '0';
           registroDisplay.textContent = '0';
 
@@ -4646,14 +3600,8 @@
         async function saveTransactionFromCalculator(data) {
           showLoading();
 
-          // Asegurarnos de que tiene la fecha de creación del servidor
-          const dataToSave = {
-            ...data,
-            createdAt: serverTimestamp(),
-          };
-
           try {
-            await addDoc(transactionsCol, dataToSave);
+            await addDoc(transactionsCol, data);
             showToast('Transacción guardada');
             // onSnapshot se encargará de actualizar la UI
           } catch (error) {
