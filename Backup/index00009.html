@@ -2572,35 +2572,8 @@
       </div>
     </div>
 
-    <div id="bank-select-modal" class="modal">
-      <div class="modal-content" style="max-width: 400px">
-        <div class="modal-header">
-          <h2 id="bank-select-modal-title">Confirmar Venta</h2>
-          <button class="close-btn" id="close-bank-select-modal-btn">&times;</button>
-        </div>
-        <div class="modal-body">
-          <p id="bank-select-modal-message">
-            Selecciona el banco/cuenta donde se registrará este ingreso:
-          </p>
-          <div class="form-group">
-            <label for="bank-select-dropdown">Banco/Cuenta</label>
-            <select id="bank-select-dropdown" required></select>
-            <span class="input-error-message" id="bank-select-dropdown-error"></span>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" id="bank-select-modal-cancel-btn">
-            Cancelar
-          </button>
-          <button type="button" class="btn btn-primary" id="bank-select-modal-confirm-btn">
-            Confirmar e Ingresar
-          </button>
-        </div>
-      </div>
-    </div>
-
     <footer>
-      <p>&copy; 2025 Gestor Financiero 000010</p>
+      <p>&copy; 2025 Gestor Financiero 00009</p>
     </footer>
 
     <!-- PWA: Registro del Service Worker -->
@@ -2698,7 +2671,7 @@
 
         let confirmCallback = null;
         let currentMobileTxId = null;
-        let tempOrderIdForBankSelect = null;
+
         // --- INICIO: NUEVAS VARIABLES GLOBALES PARA EL MODAL DE CALCULADORA ---
         let tempTransactionData = {};
         let currentCalculatorExpression = '0';
@@ -2758,14 +2731,7 @@
         const mobileActionsModal = document.getElementById('mobile-actions-modal');
         const mobileActionsEditBtn = document.getElementById('mobile-actions-edit-btn');
         const mobileActionsDeleteBtn = document.getElementById('mobile-actions-delete-btn');
-        // --- INICIO: NUEVOS SELECTORES MODAL SELECCIÓN DE BANCO ---
-        const bankSelectModal = document.getElementById('bank-select-modal');
-        const bankSelectDropdown = document.getElementById('bank-select-dropdown');
-        const bankSelectModalConfirmBtn = document.getElementById('bank-select-modal-confirm-btn');
-        const bankSelectModalCancelBtn = document.getElementById('bank-select-modal-cancel-btn');
-        const closeBankSelectModalBtn = document.getElementById('close-bank-select-modal-btn');
-        const bankSelectDropdownError = document.getElementById('bank-select-dropdown-error');
-        // --- FIN: NUEVOS SELECTORES ---
+
         // --- INICIO: NUEVOS SELECTORES PARA EL MODAL DE CALCULADORA ---
         const calculatorModal = document.getElementById('add-registro-calculator-modal');
         const btnGasto = document.getElementById('calc-btn-gasto');
@@ -3775,94 +3741,8 @@
           );
         }
 
-        // --- INICIO: NUEVAS FUNCIONES PARA EL MODAL DE BANCO ---
-        /**
-         * Abre el modal de selección de banco y guarda el ID del pedido temporalmente.
-         */
-        function openBankSelectModal(orderId) {
-          const order = localOrders.find((o) => o.id === orderId);
-          if (!order) {
-            console.error('Pedido no encontrado');
-            // Revertir el checkbox si el pedido no se encuentra
-            const checkbox = document.getElementById(`confirm-${orderId}`);
-            if (checkbox) checkbox.checked = false;
-            return;
-          }
-
-          // Guardar el ID del pedido temporalmente
-          tempOrderIdForBankSelect = orderId;
-
-          // Poblar el desplegable de bancos
-          populateSelectWithOptions(
-            'bank-select-dropdown',
-            localBanks,
-            null,
-            null,
-            'Selecciona un banco...',
-            '',
-            true,
-          );
-
-          // Intentar pre-seleccionar 'Efectivo' si existe
-          if (localBanks.includes('Efectivo')) {
-            bankSelectDropdown.value = 'Efectivo';
-          }
-
-          // Limpiar errores previos
-          hideError(bankSelectDropdownError);
-
-          // Mostrar el modal
-          bankSelectModal.classList.add('active');
-        }
-
-        /**
-         * Cierra el modal de banco y desmarca el checkbox (si el usuario canceló).
-         */
-        function closeBankSelectModal() {
-          if (tempOrderIdForBankSelect) {
-            // Si el usuario cancela, buscamos el checkbox original y lo desmarcamos
-            const checkbox = document.getElementById(`confirm-${tempOrderIdForBankSelect}`);
-            if (checkbox) checkbox.checked = false;
-          }
-          bankSelectModal.classList.remove('active');
-          tempOrderIdForBankSelect = null; // Limpiar el ID temporal
-        }
-
-        /**
-         * Se ejecuta al confirmar el banco. Valida y llama a handleConfirmDelivery.
-         */
-        async function handleBankSelectionConfirm() {
-          // 1. Validar que se seleccionó un banco
-          if (
-            !validateRequired(
-              bankSelectDropdown,
-              bankSelectDropdownError,
-              'Debes seleccionar un banco.',
-            )
-          ) {
-            return; // Detener si no es válido
-          }
-
-          const selectedBank = bankSelectDropdown.value;
-          const orderId = tempOrderIdForBankSelect;
-
-          if (!orderId) {
-            console.error('Error: Se perdió el ID del pedido.');
-            closeBankSelectModal();
-            return;
-          }
-
-          // 2. Cerrar el modal y limpiar el ID temporal
-          bankSelectModal.classList.remove('active');
-          tempOrderIdForBankSelect = null;
-
-          // 3. Llamar a la función de confirmación (que ahora modificaremos)
-          await handleConfirmDelivery(orderId, selectedBank);
-        }
-
-        // --- FIN: NUEVAS FUNCIONES PARA EL MODAL DE BANCO ---
-
         // --- PEDIDOS ---
+
         /**
          * Renderiza la lista de pedidos pendientes.
          */
@@ -3919,16 +3799,12 @@
             `;
               // --- FIN: HTML MODIFICADO ---
 
-              // Listener para el checkbox (Modificado)
+              // Listener para el checkbox (existente)
               const confirmCheckbox = card.querySelector(`#confirm-${order.id}`);
               if (confirmCheckbox) {
-                confirmCheckbox.addEventListener('change', (e) => {
-                  // Solo abrimos el modal si el usuario está MARCANDO la casilla
-                  if (e.target.checked) {
-                    openBankSelectModal(e.target.dataset.id);
-                  }
-                  // No hacemos nada si la desmarca (porque no debería poder)
-                });
+                confirmCheckbox.addEventListener('change', (e) =>
+                  handleConfirmDelivery(e.target.dataset.id),
+                );
               }
 
               // --- INICIO: LISTENER PARA EL NUEVO BOTÓN DE BORRAR ---
@@ -4169,7 +4045,7 @@
         /**
          * ¡LA AUTOMATIZACIÓN! Confirma la entrega, actualiza el pedido y crea la transacción de venta.
          */
-        async function handleConfirmDelivery(orderId, selectedBank) {
+        async function handleConfirmDelivery(orderId) {
           const order = localOrders.find((o) => o.id === orderId);
           if (!order) {
             showMessageModal('Error', 'No se encontró el pedido.', 'error');
@@ -4183,7 +4059,7 @@
             date: today,
             description: `Venta Pedido: ${order.customerName}`,
             category: 'Ventas', // ¡Importante! Debe existir esta categoría
-            bank: selectedBank, // O un banco por defecto. TODO: Preguntar al usuario
+            bank: 'Efectivo', // O un banco por defecto. TODO: Preguntar al usuario
             amount: order.totalAmount,
             createdAt: serverTimestamp(),
             linkedOrderId: orderId, // Enlace al pedido
@@ -4215,8 +4091,6 @@
           } catch (error) {
             console.error('Error al confirmar entrega:', error);
             showMessageModal('Error', 'No se pudo confirmar la entrega.', 'error');
-            const checkbox = document.getElementById(`confirm-${orderId}`);
-            if (checkbox) checkbox.checked = false;
           } finally {
             hideLoading();
           }
@@ -4549,14 +4423,6 @@
             if (e.target === productSelectModal) productSelectModal.classList.remove('active');
           });
           confirmProductSelectionBtn.addEventListener('click', confirmProductSelection);
-          // --- INICIO: LISTENERS MODAL SELECCIÓN DE BANCO ---
-          bankSelectModalConfirmBtn.addEventListener('click', handleBankSelectionConfirm);
-          bankSelectModalCancelBtn.addEventListener('click', closeBankSelectModal);
-          closeBankSelectModalBtn.addEventListener('click', closeBankSelectModal);
-          bankSelectModal.addEventListener('click', (e) => {
-            if (e.target === bankSelectModal) closeBankSelectModal();
-          });
-          // --- FIN: LISTENERS MODAL SELECCIÓN DE BANCO ---
           // --- FIN: NUEVOS LISTENERS DE PRODUCTOS Y PEDIDOS ---
         }
 
