@@ -32,9 +32,7 @@
     />
 
     <!-- PASO 1: AÑADIR LOS SCRIPTS DE FIREBASE (Módulos) -->
-    <!-- Estos son los "músculos" de Firebase que importaremos en nuestro script -->
     <script type="module">
-      // Importamos las herramientas que necesitamos de la "caja" de Firebase
       import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
       import {
         getAuth,
@@ -871,7 +869,8 @@
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         width: 100%;
         max-width: 500px; /* Ancho estándar para modales */
-        max-height: 90vh;
+        height: 700px;
+        max-height: 95vh;
         display: flex;
         flex-direction: column;
       }
@@ -1302,7 +1301,7 @@
 
       /* Display de la calculadora */
       #registro-display-wrapper {
-        padding: 1rem 1rem;
+        padding: 0.5rem 0.5rem;
         background-color: var(--medium-gray);
         border-bottom: 1px solid var(--border-color);
         transition: background-color 0.2s;
@@ -1315,7 +1314,7 @@
         padding-bottom: 0rem;
         padding-left: 0.75rem;
         padding-right: 0.75rem;
-        font-size: 2rem;
+        font-size: 1.25rem;
         font-weight: 600;
         text-align: right;
         color: var(--text-color);
@@ -1328,7 +1327,8 @@
       #calculadora-keypad {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 0;
+        gap: 0.5rem;
+        padding: 0.5rem;
         background-color: var(--medium-gray);
       }
 
@@ -1337,7 +1337,10 @@
         border: none;
         border-right: 1px solid var(--medium-gray);
         border-top: 1px solid var(--medium-gray);
-        padding: 0.5rem 0;
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-top: 7px;
+        padding-bottom: 7px;
         font-size: 1.25rem;
         font-weight: 500;
         color: var(--text-color);
@@ -2263,8 +2266,6 @@
       </div>
     </div>
 
-    <!-- Modales (Sin cambios de HTML) -->
-
     <!-- Modal Transacción (AHORA SÓLO PARA EDITAR) -->
     <div id="transaction-modal" class="modal">
       <div class="modal-content">
@@ -2390,7 +2391,7 @@
             rows="2"
             placeholder="Descripción o comentario opcional..."
           ></textarea>
-          <div class="form-group" style="margin-top: 1rem">
+          <div class="form-group" style="margin-top: 0rem">
             <label for="registro-banco">Banco/Cuenta</label>
             <select id="registro-banco" required>
               <option value="" disabled selected>Selecciona un banco...</option>
