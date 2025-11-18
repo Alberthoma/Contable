@@ -1,5 +1,5 @@
 // sw.js: cache básico para PWA
-const CACHE = "contable-cache-v1";
+const CACHE = "contable-cache-v2";
 const ASSETS = ["./", "./index.html"];
 
 self.addEventListener("install", (e) => {
