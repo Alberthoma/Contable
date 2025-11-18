@@ -1852,6 +1852,76 @@
         }
         /* --- FIN: MODIFICACIONES TABLA MÓVIL --- */
       }
+
+      /* ========================================= */
+      /* --- ESTILOS PARA TOOLTIP DE INFORMACIÓN --- */
+      /* ========================================= */
+
+      /* Contenedor flexible para alinear icono categoría y botón info */
+      .category-cell-content {
+        display: flex;
+        align-items: center;
+        justify-content: center; /* Centrado en móvil */
+        gap: 8px;
+      }
+
+      /* Botón de información (El círculo con la "i") */
+      .info-btn {
+        display: none; /* Oculto por defecto en escritorio */
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background-color: var(--white);
+        color: var(--primary-blue); /* Color azul de tu tema */
+        border: 1px solid var(--primary-blue);
+        cursor: pointer;
+        flex-shrink: 0;
+        padding: 0;
+        transition: all 0.2s ease;
+      }
+
+      .info-btn:hover,
+      .info-btn:active {
+        background-color: var(--primary-blue);
+        color: var(--white);
+        transform: scale(1.1);
+      }
+
+      /* La ventana flotante (Tooltip) */
+      .info-tooltip {
+        position: fixed;
+        background-color: var(--text-color); /* Fondo oscuro */
+        color: var(--white);
+        padding: 0.75rem 1rem;
+        border-radius: 6px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        font-size: 0.9rem;
+        line-height: 1.4;
+        max-width: 250px;
+        z-index: 99999; /* Por encima de todo */
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 0.2s ease, transform 0.2s ease;
+        pointer-events: none;
+      }
+
+      .info-tooltip.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* --- REGLA IMPORTANTE: Mostrar solo en pantallas pequeñas --- */
+      @media (max-width: 768px) {
+        .info-btn {
+          display: inline-flex; /* Se hace visible solo en móvil */
+        }
+        /* Ajuste para que la celda de categoría en móvil permita el flex */
+        #transactions-table td:nth-child(3) {
+          display: table-cell;
+        }
+      }
     </style>
   </head>
 
@@ -3052,7 +3122,21 @@
                                  <span class="mobile-date">${formatDateMobile(tx.date)}</span>
                              </td>
                              <td>${tx.description || ''}</td>
-                             <td>${getCategoryDisplay(tx.category || 'Sin Categoría')}</td>
+                             <td>
+                                <div class="category-cell-content">
+                                    ${getCategoryDisplay(tx.category || 'Sin Categoría')}
+                                    
+                                    <button class="info-btn" type="button" data-description="${
+                                      tx.description
+                                        ? tx.description.replace(/"/g, '&quot;')
+                                        : 'Sin descripción'
+                                    }">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width: 14px; height: 14px;">
+                                            <path d="M11 17h2v-6h-2v6zm1-15C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM11 9h2V7h-2v2z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
                              <td>${tx.bank || ''}</td>
                              <td class="align-right no-wrap ${
                                tx.type === 'income' ? 'income-text' : 'expense-text'
@@ -4558,6 +4642,62 @@
           });
           // --- FIN: LISTENERS MODAL SELECCIÓN DE BANCO ---
           // --- FIN: NUEVOS LISTENERS DE PRODUCTOS Y PEDIDOS ---
+          /* PEGAR ESTO AL FINAL DE LA FUNCIÓN setupEventListeners() */
+
+          // --- LÓGICA PARA EL TOOLTIP FLOTANTE (Descripción en Móvil) ---
+          document.body.addEventListener('click', (e) => {
+            // 1. Si ya hay un tooltip abierto, lo cerramos primero
+            const existingTooltip = document.querySelector('.info-tooltip');
+            if (existingTooltip) {
+              existingTooltip.remove();
+            }
+
+            // 2. Verificamos si el clic fue en nuestro botón .info-btn (o dentro de él)
+            const infoBtn = e.target.closest('.info-btn');
+
+            if (infoBtn) {
+              e.stopPropagation(); // Evita que el clic cierre el tooltip inmediatamente
+
+              const description = infoBtn.dataset.description;
+
+              // Crear el elemento flotante
+              const tooltip = document.createElement('div');
+              tooltip.className = 'info-tooltip';
+              tooltip.textContent = description;
+              document.body.appendChild(tooltip);
+
+              // Calcular posición
+              const rect = infoBtn.getBoundingClientRect();
+
+              // Lógica inteligente de posición para que no se salga de la pantalla en móviles
+              let leftPos = rect.left;
+              // Si está muy a la derecha (borde derecho), moverlo hacia la izquierda
+              if (leftPos + 200 > window.innerWidth) {
+                leftPos = window.innerWidth - 220;
+              }
+              // Si el cálculo da negativo (muy a la izquierda), fijar margen mínimo
+              if (leftPos < 10) leftPos = 10;
+
+              tooltip.style.left = `${leftPos}px`;
+              tooltip.style.top = `${rect.bottom + 8}px`; // Justo debajo del botón
+
+              // Pequeño retraso para permitir la transición CSS
+              requestAnimationFrame(() => {
+                tooltip.classList.add('visible');
+              });
+            }
+          });
+
+          // Cerrar el tooltip si se hace scroll (mejora la experiencia en móvil)
+          window.addEventListener(
+            'scroll',
+            () => {
+              const existingTooltip = document.querySelector('.info-tooltip');
+              if (existingTooltip) existingTooltip.remove();
+            },
+            { passive: true },
+          );
+          // --- FIN: LÓGICA PARA EL TOOLTIP FLOTANTE (Descripción en Móvil) ---
         }
 
         // --- INICIO: NUEVAS FUNCIONES PARA EL MODAL DE CALCULADORA ---
